@@ -1,0 +1,5 @@
+require_relative '../lib/mysql/connection'
+require_relative '../lib/mysql/user'
+require_relative '../lib/mysql/word'
+require_relative '../lib/mysql/questionType'
+require_relative '../lib/mysql/session'
