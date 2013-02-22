@@ -32,4 +32,8 @@ describe MySqlDB::WordDAO do
     ids = @wordDao.getRandomWordIds(50)
     ids.uniq.length.should be 50
   end
+
+  after do
+    @wordDao.write("alter table word auto_increment=1"
+  end
 end
