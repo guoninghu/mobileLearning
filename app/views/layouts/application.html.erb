@@ -10,8 +10,11 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-
-<%= yield %>
-
+  <div data-role="page">
+    <% if params[:controller] != "user" %>
+      <%= render partial: "layouts/header" %>
+    <% end %>
+    <%= yield %>
+  </div>
 </body>
 </html>

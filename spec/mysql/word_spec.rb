@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe MySqlDB::Word do
+describe MySqlDB::WordDAO do
   def verifyWord(word)
     word.should be_an_instance_of MySqlDB::Word
     word.id.should be 1
@@ -8,19 +8,28 @@ describe MySqlDB::Word do
     word.picture.should eq 'absent.jpg'
   end
 
+  before do
+    @wordDao = MySqlDB::WordDAO.new
+  end
+
 	it "Read a word from word table by id" do
-    verifyWord(MySqlDB::Word.getWordById(1))
+    verifyWord(@wordDao.getItemById(1))
 	end
 
 	it "Read a word from word table by name" do
-    verifyWord(MySqlDB::Word.getWordByText('absent'))
+    verifyWord(@wordDao.getWordByText('absent'))
 	end
 
   it "Add a word to word table" do
-    MySqlDB::Word.addWord('absent', 'absent.jpg').should be true
+    @wordDao.addWord('absent', 'absent.jpg').should be true
   end
 
   it "Initialize word table" do
-    MySqlDB::Word.initialWords.should >= 0
+    @wordDao.initialWords.should >= 0
+  end
+
+  it "Get random word ids" do
+    ids = @wordDao.getRandomWordIds(50)
+    ids.uniq.length.should be 50
   end
 end

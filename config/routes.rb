@@ -71,5 +71,18 @@ MobileLearning::Application.routes.draw do
     end
   end
 
+  resources :question do
+    member do
+      get 'answer'
+      post 'answer'
+    end
+  end
+
+  resources :questionset do
+    member do
+      get 'start'
+    end
+  end
+
   root :to => 'learning#list'
 end

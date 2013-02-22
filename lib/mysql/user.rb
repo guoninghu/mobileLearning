@@ -5,7 +5,6 @@ module MySqlDB
 
   class User
 	  attr_reader :id, :name, :email, :password, :timestamp
-		@@connection = Connection.new
 
 		def initialize(user)
 			@id, @name, @email, @password, @timestamp =
@@ -13,26 +12,25 @@ module MySqlDB
 		end
 
 		def to_json
-			return {id: @id, name: @name, email: @email, password: @password, timestamp: @timestamp}.to_json
+			{id: @id, name: @name, email: @email, password: @password, timestamp: @timestamp}.to_json
 		end
-		
-		def self.getUser(condition)
-			users = @@connection.read("select id, username, email, password, timestamp from user where " + condition)
-			return nil if users.nil?
-			return nil if users.length == 0 
-			return User.new(users[0])
-		end
-		
-		def self.getUserById(id)
-			return getUser("id = " + id.to_s)
-		end
+  end
 
-		def self.getUserByName(username)
-			return getUser("username = '#{username}'")
-		end
+  class UserDAO < ItemDAO
+    def initialize
+      super("select id, username, email, password, timestamp from user where ")
+    end
+
+    def createItem(user)
+      User.new(user)
+    end
 		
-    def self.getUserByEmail(email)
-			return getUser("email = '#{email}'")
+    def getUserByName(name)
+			getItem("username='#{name}'")
+		end
+    
+    def getUserByEmail(email)
+			getItem("email='#{email}'")
 		end
 	end
 

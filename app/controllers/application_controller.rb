@@ -7,11 +7,13 @@ class ApplicationController < ActionController::Base
   before_filter :loadSession
 
   def loadSession
-    @session = MySqlDB::Session.getSessionById(request.session_options[:id])
+    @session = MySqlDB::SessionDAO.new.getSessionById(request.session_options[:id])
     if @session.nil? || @session.status != "active"
       redirect_to "/user/login" unless params[:controller] == "user"
     else
-      @user = MySqlDB::User.getUserById(@session.user)
+      @user = MySqlDB::UserDAO.new().getItemById(@session.user)
+      @name = @user.name
+      @name[0] = @user.name[0].upcase
     end
   end
 end
