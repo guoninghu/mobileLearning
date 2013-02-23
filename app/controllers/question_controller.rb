@@ -3,7 +3,8 @@ require 'mysql/word'
 
 class QuestionController < ApplicationController
   def answer
-    question = MySqlDB::QuestionDAO.new.getItemById(params[:id])
+    questionDao = MySqlDB::QuestionDAO.new
+    question = questionDao.getItemById(params[:id])
     words = MySqlDB::WordDAO.new.getItems("id in (#{(question.competitor | [question.target]).join(",")})")
 
     @options = ["", "", "", ""]
@@ -13,6 +14,8 @@ class QuestionController < ApplicationController
       @answerIndex = question.order.index(0)
       @image = (@answerIndex == (@answer-1)) ? "smiley" : "sad"
       @nextQuestionId = question.getNextQuestionId
+      @questionSet = question.questionSet
+      questionDao.setAnswer(params[:id], @answer) 
     end
    
     words.each do |word|

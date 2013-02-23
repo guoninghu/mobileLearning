@@ -5,7 +5,7 @@
       <div class="ui-block-b" style="width:20%; margin-top:20px; text-align:center"><%= image_tag "faces/#{@image}.jpg", size: "40x40" %></div>
       <div class="ui-block-c" style="width:35%; margin-top:15px; text-align:right">
         <% if @nextQuestionId.nil? %>
-          <a href=<%= "/" %> data-role="button" data-corners="false" data-inline="true" data-icon="arrow-r" data-iconpos="right">Done</a>
+          <a href=<%= "/questionset/#{@questionSet}/summary" %> data-role="button" data-corners="false" data-inline="true" data-icon="arrow-r" data-iconpos="right">Done</a>
         <% else %>
           <a href=<%= "/question/#{@nextQuestionId}/answer" %> data-role="button" data-corners="false" data-inline="true" data-icon="arrow-r" data-iconpos="right">Next</a>
         <% end %>

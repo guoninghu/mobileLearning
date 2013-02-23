@@ -81,6 +81,7 @@ MobileLearning::Application.routes.draw do
   resources :questionset do
     member do
       get 'start'
+      get 'summary'
     end
   end
 
