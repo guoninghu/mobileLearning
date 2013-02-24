@@ -85,5 +85,5 @@ MobileLearning::Application.routes.draw do
     end
   end
 
-  #root :to => 'learning#list'
+  root :to => 'learning#list'
 end

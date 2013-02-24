@@ -34,6 +34,6 @@ describe MySqlDB::WordDAO do
   end
 
   after do
-    @wordDao.write("alter table word auto_increment=1"
+    @wordDao.write("alter table word auto_increment=1")
   end
 end

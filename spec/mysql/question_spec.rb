@@ -13,6 +13,7 @@ describe MySqlDB::QuestionDAO do
 
   before do
     @questionDao = MySqlDB::QuestionDAO.new
+		@questionDao.write("delete from question where question_set = 1")  
   end
 
   it "Insert a question to question table" do
