@@ -5,7 +5,13 @@ module MySqlDB
 
   class Connection
 		def initialize
-			@config = JSON.parse(IO.read(File.dirname(__FILE__) + "/../assets/mysql/mysql.js"))
+			if Rails.env.production?
+				ENV["CLEARDB_DATABASE_URL"] =~ /mysql:\/\/(.*):(.*)@(.*)\/(heroku_.*)\?/
+				@config = {"host" => $3, "user" => $1, "passwd" => $2, "dbName" => $4, "port" => 3306}
+      else
+				@config = JSON.parse(IO.read(File.dirname(__FILE__) + "/../assets/mysql/mysql.js"))
+			end
+			puts @config.to_json
 		end
 
 		def getConnection

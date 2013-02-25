@@ -7,7 +7,8 @@ class ApplicationController < ActionController::Base
   before_filter :loadSession
 
   def loadSession
-    @session = MySqlDB::SessionDAO.new.getSessionById(request.session_options[:id])
+    puts ENV["CLEARDB_DATABASE_URL"]
+		@session = MySqlDB::SessionDAO.new.getSessionById(request.session_options[:id])
     if @session.nil? || @session.status != "active"
       redirect_to "/user/login" unless params[:controller] == "user"
     else
