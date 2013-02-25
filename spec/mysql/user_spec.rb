@@ -6,11 +6,15 @@ describe MySqlDB::UserDAO do
     user.id.should be 1
     user.name.should eq 'test'
     user.email.should eq 'test@gmail.com'
-    user.password.should eq 'test'
+    user.passwordMatch('test').should be true
   end
 
   before do
     @userDao = MySqlDB::UserDAO.new
+  end
+
+  it "Add a user to user table" do
+    @userDao.addUser("test", "test@gmail.com", "test").should be 0
   end
 
 	it "Read a user from user table by id" do

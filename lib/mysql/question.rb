@@ -48,7 +48,10 @@ module MySqlDB
 
     def createQuestions(qSetType, qSetId)
       wordDao = WordDAO.new
-      wordIds = wordDao.getRandomWordIds(50)
+      words = wordDao.getRandomWords(50)
+      wordIds = []
+      words.each{|word| wordIds << word.id}
+
       ret_val = []
       0.upto(9) do |n|
         ret_val << addQuestion(qSetId, wordIds[n*4], wordIds[n*4+1, 3], (0..3).to_a.shuffle, 1)

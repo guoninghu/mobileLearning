@@ -1,10 +1,10 @@
 require_relative './connection'
-require 'json'
+require 'bcrypt'
 
 module MySqlDB
 
   class User
-	  attr_reader :id, :name, :email, :password, :timestamp
+	  attr_reader :id, :name, :email, :timestamp
 
 		def initialize(user)
 			@id, @name, @email, @password, @timestamp =
@@ -12,8 +12,12 @@ module MySqlDB
 		end
 
 		def to_json
-			{id: @id, name: @name, email: @email, password: @password, timestamp: @timestamp}.to_json
+			{id: @id, name: @name, email: @email, timestamp: @timestamp}.to_json
 		end
+
+    def passwordMatch(password)
+      BCrypt::Password.new(@password) == password
+    end
   end
 
   class UserDAO < ItemDAO
@@ -23,6 +27,11 @@ module MySqlDB
 
     def createItem(user)
       User.new(user)
+    end
+
+    def addUser(name, email, password)
+      my_password = BCrypt::Password.create(password)
+      insert("insert ignore into user (username, email, password) value ('#{name}', '#{email}', '#{my_password}')")
     end
 		
     def getUserByName(name)

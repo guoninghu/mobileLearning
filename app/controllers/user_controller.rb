@@ -9,10 +9,10 @@ class UserController < ApplicationController
       if user.nil?
         @msg = "User does not exist"
       else
-        if user.password != params[:password]
+        if !user.passwordMatch(params[:password])
           @msg = "Invalid password"
         else
-          MySqlDB::SessionDAO.new().newSession(request.session_options[:id], user.id)
+          MySqlDB::SessionDAO.new().newSession(@sessionId, user.id)
           redirect_to controller: "learning", action: "list"
         end
       end
@@ -23,7 +23,9 @@ class UserController < ApplicationController
   end
 
   def logout
-    MySqlDB::SessionDAO.new().expireSession(request.session_options[:id])
-    redirect_to "/user/login", flash: {msg: "You have been logged out"}
+    MySqlDB::SessionDAO.new().closeSession(@sessionId)
+    @@sessions.delete(@sessionId)
+    reset_session
+		redirect_to "/user/login", flash: {msg: "You have been logged out"}
   end
 end

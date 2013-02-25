@@ -15,8 +15,14 @@ module MySqlDB
   end
   
   class WordDAO < ItemDAO
+    @@words = nil 
+
     def initialize
       super("select id, word, picture, timestamp from word where ")
+      if @@words.nil?
+        puts "Load words"
+        @@words = getItems("id > 0")
+      end
     end
 
     def createItem(word)
@@ -42,26 +48,8 @@ module MySqlDB
 			addWords(JSON.parse(IO.read(File.dirname(__FILE__) + "/../../app/assets/wordList.js")))
     end
 
-    def getMaxId
-      read("select max(id) from word")[0][0].to_i
-    end
-
-    def getMinId
-      read("select min(id) from word")[0][0].to_i
-    end
-
-    def getRandomWordIds(num)
-      ret_val = []
-      while (ret_val.length < num)
-        diff = num - ret_val.length
-        ids = (getMinId..getMaxId).to_a.shuffle[0,diff+10]
-
-        read("select id from word where id in (#{ids.join(",")})").each do |val|
-          id = val[0].to_i
-          ret_val << id if !ret_val.include?(id)
-          return ret_val if ret_val.length == num
-        end
-      end
+    def getRandomWords(num)
+      return @@words.shuffle[0, num]
     end
   end
 end

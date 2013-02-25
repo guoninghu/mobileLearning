@@ -28,9 +28,9 @@ describe MySqlDB::WordDAO do
     @wordDao.initialWords.should >= 0
   end
 
-  it "Get random word ids" do
-    ids = @wordDao.getRandomWordIds(50)
-    ids.uniq.length.should be 50
+  it "Get random word" do
+    words = @wordDao.getRandomWords(50)
+    words.length.should be 50
   end
 
   after do
