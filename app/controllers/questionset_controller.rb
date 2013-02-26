@@ -9,7 +9,7 @@ class QuestionsetController < ApplicationController
     qSetType = MySqlDB::QuestionSetTypeDAO.new.getItemById(params[:id].to_i)
     qIds = MySqlDB::QuestionDAO.new.createQuestions(qSetType, qSetId)
 
-    redirect_to controller: "question", id: qIds[0], action: "answer"
+    redirect_to controller: "question", id: qIds[0], action: "ask"
   end
 
   def summary
@@ -18,21 +18,24 @@ class QuestionsetController < ApplicationController
     @totalPoints = 0
 
     wordIds = []
+    questions.each {|question| wordIds << question.target }
+
+		words = {}
+    MySqlDB::WordDAO.new.read("select word, id from word where id in(#{wordIds.join(",")})").each do |val| 
+      val[0][0] = val[0][0].upcase
+      words[val[1].to_i] = val[0]
+    end
+
     @scores = []
+		@words = []
     questions.each do |question|
-      wordIds << question.target
-      if (question.order.index(0) + 1) == question.answer
+      @words << words[question.target]
+			if (question.order.index(0) + 1) == question.answer
         @scores << "correct"
         @totalPoints += 1
       else
         @scores << "wrong"
       end
-    end
-
-    @words = []
-    MySqlDB::WordDAO.new.read("select word from word where id in(#{wordIds.join(",")})").each do |val| 
-      val[0][0] = val[0][0].upcase
-      @words << val[0]
     end
   end
 end

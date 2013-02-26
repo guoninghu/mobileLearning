@@ -1,0 +1,68 @@
+<script>
+  var submitted = true;
+  
+  $('document').ready(function() {
+    submitted = false;
+
+    $('.submit').click(function() {
+      var questionId = $('#questionId').attr("value")
+      if (submitted === true) return false;
+
+      submitted = true;
+      var answer = $(this).attr("value");
+      $.ajax({ url: "/question/" + questionId + "/answer", 
+        type: 'POST',
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+        },
+        data: {"answer": answer},
+        success: function(data) {
+          var imageId = (data["correct"] == true) ? "answerTrueImage" : "answerFalseImage";
+          $('#' + imageId).attr("style", "");
+
+          $('#nextQuestion').attr("style", "");
+          
+          var answerId = "answer" + data["answer"];
+          $('#' + answerId).parent().removeClass('ui-btn-hover-e').removeClass('ui-btn-up-e').addClass('ui-btn-up-b').buttonMarkup({"theme":"b"});
+          $('#' + answerId).removeClass('ui-btn-up-e').addClass('ui-btn-up-b').buttonMarkup({"theme":"b"});
+          return false;
+        }
+      });
+      return false;
+    });
+  });
+</script>
+
+<div data-role="content">
+  <div class="ui-grid-b">
+    <div class="ui-block-a" style="width:35%"><h1 style="color:Maroon; margin-left:50px"><%= @target %></h1></div>
+    
+    <div class="ui-block-b" style="width:20%; margin-top:20px; text-align:center">
+      <div id="answerTrueImage" style="display:none"><%= image_tag "faces/#{@image[0]}.jpg", size: "40x40" %></div>
+      <div id="answerFalseImage" style="display:none"><%= image_tag "faces/#{@image[1]}.jpg", size: "40x40" %></div>
+    </div>
+    
+    <div class="ui-block-c" style="width:35%; margin-top:15px; text-align:right">
+      <div id="nextQuestion" style="display:none">
+        <% if @nextQuestionId.nil? %>
+          <a target="_self" href=<%= "/questionset/#{@questionSet}/summary" %> data-role="button" data-corners="false" data-inline="true" data-icon="arrow-r" data-iconpos="right">Done</a>
+        <% else %>
+          <a target="_self" href=<%= "/question/#{@nextQuestionId}/ask" %> data-role="button" data-corners="false" data-inline="true" data-icon="arrow-r" data-iconpos="right">Next</a>
+        <% end %>
+      </div>
+    </div>
+  </div><!-- /grid-b -->
+
+  <div id="questionId" value="<%= params[:id] %>" style="display:none"></div>
+
+  <div class="ui-grid-a">
+    <div class="ui-block-a" style="width:45%; margin-left:30px"><button id="answer1" class="submit" data-theme="e" value='1'><%= image_tag "vocabPics/#{@options[0]}", height: 160 %></button></div>
+    <div class="ui-block-c" style="width:45%; margin-left:30px"><button id="answer2" class="submit" data-theme="e" value='2'><%= image_tag "vocabPics/#{@options[1]}", height: 160 %></button></div>
+  </div>
+  <br/>
+
+  <div class="ui-grid-a">
+    <div class="ui-block-a" style="width:45%; margin-left:30px"><button id="answer3" class="submit" data-theme="e" value='3'><%= image_tag "vocabPics/#{@options[2]}", height: 160 %></button></div>
+    <div class="ui-block-b" style="width:45%; margin-left:30px"><button id="answer4" class="submit" data-theme="e" value='4'><%= image_tag "vocabPics/#{@options[3]}", height: 160 %></button></div>
+  </div>
+</div>

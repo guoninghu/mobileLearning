@@ -73,7 +73,7 @@ MobileLearning::Application.routes.draw do
 
   resources :question do
     member do
-      get 'answer'
+      get 'ask'
       post 'answer'
     end
   end
