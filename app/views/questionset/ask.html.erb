@@ -1,0 +1,123 @@
+<script>
+  var submitted;
+  var questionSetId;
+  var words;
+  var questions;
+  var questionIds;
+  var qId;
+  var targetIndex;
+  var questionIndex;
+  
+  function setQuestion() {
+    qId = questionIds[questionIndex];
+    var question = questions[qId];
+    var order = question.order;
+    var qWordIds = question.words;
+    
+    // Update target word
+    var target = words[qWordIds[0]].word;
+    target[0] = target[0].toUpperCase();
+    $('#targetWord').html(target);
+
+    $('#answerTrueImage').attr('style', 'display:none');
+    $('#answerFalseImage').attr('style', 'display:none');
+    $('#nextQuestion').attr("style", "display:none");
+
+    // Update target image
+    for (var i=0; i<order.length; i++) {
+      if (order[i] == 0) targetIndex = i+1;
+
+      var wordId = qWordIds[order[i]];
+      targetImage = "/assets/vocabPics/" + words[wordId].picture;
+      var answerId = '#answer' + (i+1);
+      $(answerId).html('<img height="160" src="' + targetImage + '">');
+      $(answerId).parent().buttonMarkup({"theme":"e"});
+      $(answerId).buttonMarkup({"theme":"e"}).button("refresh");
+    }
+
+    questionIndex ++;
+    submitted = false;
+  }
+
+  $('document').ready(function() {
+    var qSetTypeId = $('#questionSetTypeId').attr('value');
+    $.ajax({url: '/questionset/' + qSetTypeId + '/start', success: function(data) {
+        words = data["words"];
+        questions = data["questions"];
+        questionIds = data["questionIds"];
+        questionSetId = data["questionSetId"];
+        questionIndex = 0;
+     
+        setQuestion();
+        
+        $('#questionContent').attr('style', 'visibility:visible');
+        return false;
+    } });
+
+    $('.submit').click(function() {
+      if (submitted) return false;
+      submitted = true;
+
+      var answer = $(this).val();
+      var imageId = (parseInt(answer) == targetIndex) ? "answerTrueImage" : "answerFalseImage";
+      $('#' + imageId).attr("style", "");
+
+      var str = (questionIndex < questionIds.length) ? "Next" : "Done"; 
+      $('#nextQuestionIcon').html(str).button("refresh");
+      $('#nextQuestion').attr("style", "");
+          
+      var answerId = "answer" + targetIndex;
+      $('#' + answerId).parent().removeClass('ui-btn-hover-e').removeClass('ui-btn-up-e').addClass('ui-btn-up-b').buttonMarkup({"theme":"b"});
+      $('#' + answerId).removeClass('ui-btn-up-e').addClass('ui-btn-up-b').buttonMarkup({"theme":"b"});
+
+      $.ajax({ url: "/question/" + qId + "/answer", 
+        type: 'POST',
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+        },
+        data: {"answer": answer}
+      });
+      return false;
+    });
+
+    $('#nextQuestionIcon').click(function() {
+      if (questionIndex < questionIds.length) {
+        setQuestion();
+      } else {
+        window.location.href = '/questionset/' + questionSetId + '/summary';
+      }
+
+      return false;
+    });
+  });
+</script>
+
+<div id="questionContent" data-role="content" style="visibility:hidden">
+  <div class="ui-grid-b">
+    <div class="ui-block-a" style="width:35%"><h1 id="targetWord" style="color:Maroon; margin-left:50px"></h1></div>
+    
+    <div class="ui-block-b" style="width:20%; margin-top:20px; text-align:center">
+      <div id="answerTrueImage" style="display:none"><%= image_tag "faces/#{@image[0]}.jpg", size: "40x40" %></div>
+      <div id="answerFalseImage" style="display:none"><%= image_tag "faces/#{@image[1]}.jpg", size: "40x40" %></div>
+    </div>
+    
+    <div class="ui-block-c" style="width:35%; margin-top:15px; text-align:right">
+      <div id="nextQuestion" style="display:none">
+        <button id="nextQuestionIcon" data-role="button" data-theme="b" data-corners="false" data-inline="true" data-icon="arrow-r" data-iconpos="right"></button>
+      </div>
+    </div>
+  </div><!-- /grid-b -->
+
+  <div id="questionSetTypeId" value="<%= params[:id] %>" style="display:none"></div>
+
+  <div class="ui-grid-a">
+    <div class="ui-block-a" style="width:45%; margin-left:30px"><button id="answer1" class="submit" data-theme="e" value='1'><img height="160" src=""></button></div>
+    <div class="ui-block-c" style="width:45%; margin-left:30px"><button id="answer2" class="submit" data-theme="e" value='2'><img height="160" src=""></button></div>
+  </div>
+  <br/>
+
+  <div class="ui-grid-a">
+    <div class="ui-block-a" style="width:45%; margin-left:30px"><button id="answer3" class="submit" data-theme="e" value='3'><img height="160" src=""></button></div>
+    <div class="ui-block-b" style="width:45%; margin-left:30px"><button id="answer4" class="submit" data-theme="e" value='4'><img height="160" src=""></button></div>
+  </div>
+</div>

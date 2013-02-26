@@ -4,12 +4,19 @@ require "mysql/question"
 require 'mysql/word'
 
 class QuestionsetController < ApplicationController
+  def ask
+    @image = ["smiley", "sad"]
+  end
+
   def start
     qSetId = MySqlDB::QuestionSetDAO.new.addQuestionSet(@session.id, params[:id].to_i)
     qSetType = MySqlDB::QuestionSetTypeDAO.new.getItemById(params[:id].to_i)
-    qIds = MySqlDB::QuestionDAO.new.createQuestions(qSetType, qSetId)
+    questionSet = MySqlDB::QuestionDAO.new.createQuestions(qSetType, qSetId)
 
-    redirect_to controller: "question", id: qIds[0], action: "answer"
+    #@images = ["smiley", "sad"]
+    #questionSet["html"] = render_to_string "ask"
+
+    render json: questionSet, formats: [:json]
   end
 
   def summary
@@ -18,21 +25,24 @@ class QuestionsetController < ApplicationController
     @totalPoints = 0
 
     wordIds = []
+    questions.each {|question| wordIds << question.target }
+
+		words = {}
+    MySqlDB::WordDAO.new.read("select word, id from word where id in(#{wordIds.join(",")})").each do |val| 
+      val[0][0] = val[0][0].upcase
+      words[val[1].to_i] = val[0]
+    end
+
     @scores = []
+		@words = []
     questions.each do |question|
-      wordIds << question.target
-      if (question.order.index(0) + 1) == question.answer
+      @words << words[question.target]
+			if (question.order.index(0) + 1) == question.answer
         @scores << "correct"
         @totalPoints += 1
       else
         @scores << "wrong"
       end
-    end
-
-    @words = []
-    MySqlDB::WordDAO.new.read("select word from word where id in(#{wordIds.join(",")})").each do |val| 
-      val[0][0] = val[0][0].upcase
-      @words << val[0]
     end
   end
 end
