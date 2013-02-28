@@ -4,12 +4,16 @@ require "mysql/question"
 require 'mysql/word'
 
 class QuestionsetController < ApplicationController
+  def ask
+    @image = ["smiley", "sad"]
+  end
+
   def start
     qSetId = MySqlDB::QuestionSetDAO.new.addQuestionSet(@session.id, params[:id].to_i)
     qSetType = MySqlDB::QuestionSetTypeDAO.new.getItemById(params[:id].to_i)
-    qIds = MySqlDB::QuestionDAO.new.createQuestions(qSetType, qSetId)
+    questionSet = MySqlDB::QuestionDAO.new.createQuestions(qSetType, qSetId)
 
-    redirect_to controller: "question", id: qIds[0], action: "ask"
+    render json: questionSet, formats: [:json]
   end
 
   def summary
