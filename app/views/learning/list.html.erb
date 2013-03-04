@@ -1,9 +1,32 @@
-<div data-role="content" style="text-align:center" id="BiggerFont">
-  <h1>Choose a game to play</h1>
+<% javascript 'learning/list.js' %>
 
-  <table cellspacing="10" style="margin-left:auto; margin-right:auto"> 
-    <tr><td>
-        <a href="/questionset/1/ask" data-role="button" data-theme='b'>Word-Picture Matching</a>
-    </td></tr>
-  </table>
+<div data-role="content" id="BiggerFont">
+  <div class="ui-grid-a">
+    <div class="ui-block-a" style="width:70%"><h1><span style="color:Maroon">Choose a game to play</span></h1></div>
+    <div class="ui-block-b" style="width:25%">
+      <select name="grade" id="grade" data-inline="true">
+        <option value="basic">Basic</option>
+        <option value="3rdgrade">3rd Grade</option>
+      </select>
+    </div>
+  </div><!-- /grid-a -->
+  
+  <div id="basic">
+    <table cellspacing="30" style="margin-left:auto; margin-right:auto"> 
+      <tr><td>
+          <a href="/questionset/2/ask?grade=1" data-role="button" data-theme='b' target='_blank'>Word-Picture Matching Simple</a>
+      </td></tr>
+      <tr><td>
+          <a href="/questionset/3/ask?grade=1" data-role="button" data-theme='b' target='_blank'>Word-Picture Matching Intermediate</a>
+      </td></tr>
+    </table>
+  </div>
+
+  <div id="3rdgrade" style="display:none">
+    <table cellspacing="10" style="margin-left:auto; margin-right:auto"> 
+      <tr><td>
+          <a href="/questionset/1/ask?grade=5" data-role="button" data-theme='b' target='_blank'>Word-Picture Matching</a>
+      </td></tr>
+    </table>
+  </div>
 </div>

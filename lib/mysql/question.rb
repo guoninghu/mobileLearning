@@ -45,7 +45,7 @@ module MySqlDB
     def setAnswer(id, answer)
       @@connection.write("update question set answer = #{answer} where id = #{id}")
     end
-
+=begin
     def createQuestions(qSetType, qSetId)
       wordDao = WordDAO.new
       @words = {}
@@ -64,5 +64,6 @@ module MySqlDB
 
       return {words: @words, questions: @questions, questionIds: @qIds, questionSetId: qSetId}
     end
+=end
   end
 end
