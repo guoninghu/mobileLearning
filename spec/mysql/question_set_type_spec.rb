@@ -15,6 +15,6 @@ describe MySqlDB::QuestionSetTypeDAO do
 
 	it "Read a question type from question_type table by id" do
     verifyQuestionSetType(@qSetTypeDao.getItemById(1), 1, 1, 10, 3)
-    verifyQuestionSetType(@qSetTypeDao.getItemById(3), 3, 1, 10, 1)
+    verifyQuestionSetType(@qSetTypeDao.getItemById(3), 3, 1, 10, 2)
   end
 end
