@@ -25,12 +25,7 @@ describe MySqlDB::QuestionDAO do
     
     @questionDao.getQuestionsBySet(1).length.should be 1
   end
-
-  it "Create questions" do
-    @questionDao.createQuestions(nil, 1).length.should be 10
-    @questionDao.getQuestionsBySet(1).length.should be 10
-  end
-
+  
   after do
     @questionDao.write("delete from question where question_set = 1")
     @questionDao.write("alter table question auto_increment=1")

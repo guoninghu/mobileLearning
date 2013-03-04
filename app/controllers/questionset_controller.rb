@@ -6,17 +6,36 @@ require 'mysql/word'
 class QuestionsetController < ApplicationController
   def ask
     @image = ["smiley", "sad"]
+    @colClass = ["a", "b", "c"]
+    qSetType = MySqlDB::QuestionSetTypeDAO.new.getItemById(params[:id].to_i)
+    
+    if qSetType.numCompetitors == 3
+      @rows, @cols = 2, 2
+      @rowClass = "b"
+    elsif qSetType.numCompetitors == 1
+      @rows, @cols = 2, 1
+      @rowClass = "b"
+    elsif qSetType.numCompetitors == 2
+      @rows, @cols = 3, 1
+      @rowClass = "c"
+    end
   end
 
   def start
-    qSetId = MySqlDB::QuestionSetDAO.new.addQuestionSet(@session.id, params[:id].to_i)
-    qSetType = MySqlDB::QuestionSetTypeDAO.new.getItemById(params[:id].to_i)
-    questionSet = MySqlDB::QuestionDAO.new.createQuestions(qSetType, qSetId)
+    qSetDao = MySqlDB::QuestionSetDAO.new
+    typeId = params[:id].to_i
+    grade = params[:grade].to_i
+
+    qSetId = qSetDao.addQuestionSet(@session.id, @user.id, grade, typeId)
+    questionSet = qSetDao.createQuestions(typeId, grade, qSetId)
 
     render json: questionSet, formats: [:json]
   end
 
   def summary
+    questionSet = MySqlDB::QuestionSetDAO.new.getItemById(params[:id].to_i)
+    @qSetType = questionSet.type
+    @grade = questionSet.grade
     questions = MySqlDB::QuestionDAO.new.getQuestionsBySet(params[:id].to_i)
     @totalQuestions = questions.length
     @totalPoints = 0

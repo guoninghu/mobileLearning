@@ -4,6 +4,7 @@ describe MySqlDB::WordDAO do
   def verifyWord(word)
     word.should be_an_instance_of MySqlDB::Word
     word.id.should be 1
+    word.grade.should be 5
     word.word.should eq 'absent'
     word.picture.should eq 'absent.jpg'
   end
@@ -19,7 +20,7 @@ describe MySqlDB::WordDAO do
 	it "Read a word from word table by name" do
     verifyWord(@wordDao.getWordByText('absent'))
 	end
-
+=begin
   it "Add a word to word table" do
     @wordDao.addWord('absent', 'absent.jpg').should be true
   end
@@ -27,10 +28,12 @@ describe MySqlDB::WordDAO do
   it "Initialize word table" do
     @wordDao.initialWords.should >= 0
   end
-
+=end
   it "Get random word" do
-    words = @wordDao.getRandomWords(50)
-    words.length.should be 50
+    words = @wordDao.getRandomWords(5, 10, 3)
+    words.length.should be 40
+    words = @wordDao.getRandomWords(1, 10, 2)
+    words.length.should be 30
   end
 
   after do

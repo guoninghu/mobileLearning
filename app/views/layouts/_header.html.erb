@@ -2,14 +2,14 @@
   <div class="ui-grid-b">
     <div class="ui-block-a">
       <% if (params[:controller] != "learning") || (params[:action] != "list") %>
-        <a href="/" data-role="button" data-icon="home" data-theme="b" class="ui-btn-left" style="margin-top:16px">Home</a>
+        <a href="/" data-role="button" data-icon="home" data-theme="b" class="ui-btn-left" style="margin-top:16px" target="_self">Home</a>
       <% end %>
     </div>
     <div class="ui-block-b">
       <h1><%= "Hi #{@name}!" %></h1>
     </div>
     <div class="ui-block-c">
-      <a href="/user/logout" data-role="button" data-icon="gear" data-theme='b' class="ui-btn-right" style="margin-top:16px">Log Out</a>
+      <a href="/user/logout" data-role="button" data-icon="gear" data-theme='b' class="ui-btn-right" style="margin-top:16px" target="_self">Log Out</a>
     </div>
   </div>
 </div><!-- /header -->
