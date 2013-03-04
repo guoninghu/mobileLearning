@@ -1,0 +1,1 @@
+var grades=new Array("basic","3rdgrade");$("document").ready(function(){$("select").change(function(){var e=$("#grade").val();for(var t=0;t<grades.length;t++)grades[t]==e?$("#"+grades[t]).attr("style",""):$("#"+grades[t]).attr("style","display:none")})});
