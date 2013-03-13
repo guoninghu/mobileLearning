@@ -1,27 +1,25 @@
+<% javascript 'user/login.js' %>
+
 <div data-role="content" style="text-align:center" id="BiggerFont">
   <h1>Welcome to Mobile Learning</h1>
 
-  <% if !@msg.nil? %>
-    <h3><span style="color:red"><%= @msg %></h3>
-  <% end %>
+  <h3><span id="errorMsg" style="color:red"><%= @msg %></span></h3>
 
-  <%= form_tag "/user/login" do %>
-    <table cellspacing="10" style="margin-left:auto; margin-right:auto"> 
-      <tr><td align="left">
-          <label for="name" class="ui-hidden-accessible">Name</label>
-          <input type="text" name="name" id="name" value="" placeholder="Enter user name"/>
-      </td></tr>
-      
-      <tr><td align="left">
-          <label for="password" class="ui-hidden-accessible">Password</label>
-          <input type="password" name="password" id="password" value="" placeholder="Enter password"/>
-      </td></tr>
-      
-      <tr><td>
-          <input type="submit" name="login" value="Log In" data-theme='b' data-corners="false" />
-      </td></tr>
-    </table>
-  <% end %>
+  <table cellspacing="10" style="margin-left:auto; margin-right:auto"> 
+    <tr><td align="left">
+        <label for="name" class="ui-hidden-accessible">Name</label>
+        <input type="text" name="name" id="name" value="" placeholder="Enter user name"/>
+    </td></tr>
+    
+    <tr><td align="left">
+        <label for="password" class="ui-hidden-accessible">Password</label>
+        <input type="password" name="password" id="password" value="" placeholder="Enter password"/>
+    </td></tr>
+    
+    <tr><td>
+        <input type="submit" id = "submit" name="login" value="Log In" data-theme='b' data-corners="false" />
+    </td></tr>
+  </table>
 
   <table cellspacing="10" style="margin-left:auto; margin-right:auto"> 
     <tr><td><br/><br/><br/>

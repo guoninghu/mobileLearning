@@ -5,17 +5,18 @@ class UserController < ApplicationController
   def login
     @msg = flash[:msg]
     if request.method == 'POST'
+      retVal = {}
       user = MySqlDB::UserDAO.new().getUserByName(params[:name])
       if user.nil?
-        @msg = "User does not exist"
+        retVal = {errorMsg: "User does not exist"}
       else
         if !user.passwordMatch(params[:password])
-          @msg = "Invalid password"
+          retVal = {errorMsg: "Invalid password"}
         else
           MySqlDB::SessionDAO.new().newSession(@sessionId, user.id)
-          redirect_to controller: "learning", action: "list"
         end
       end
+      render json: retVal, formats: [:json]
     end
   end
 
