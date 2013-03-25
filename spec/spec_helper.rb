@@ -7,3 +7,5 @@ require_relative '../lib/mysql/itemType'
 require_relative '../lib/mysql/questionSetType'
 require_relative '../lib/mysql/questionSet'
 require_relative '../lib/mysql/question'
+require_relative '../lib/mysql/amateur'
+

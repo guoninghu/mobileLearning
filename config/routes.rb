@@ -62,6 +62,7 @@ MobileLearning::Application.routes.draw do
       get 'logout'
       get 'register'
       post 'login'
+			post 'register'
     end
   end
 

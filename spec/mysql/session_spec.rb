@@ -1,41 +1,54 @@
 require 'spec_helper'
 
 describe MySqlDB::SessionDAO do
-  def verifySession(session, id, user, status, start_time, end_time)
+  def verifySession(session, id, token, user, status, persistent)
     session.should be_an_instance_of MySqlDB::Session
+    session.token.should eq token
     session.id.should eq id
-    session.user.should be user
+		session.user.should be user
     session.status.should eq status
-    session.start_time.should >= start_time
-    session.end_time.should <= end_time
-  end
+		if persistent
+			session.end_time.should be > session.start_time + 86400 * 300
+		else
+			session.end_time.should be < session.start_time + 100000
+  	end
+	end
 
   before do
     @sessionDao = MySqlDB::SessionDAO.new
+		session = @sessionDao.newSession(1, false)
+		@token, @id = session.token, session.id
   end
 
-  it "Create a new session" do
-    @sessionDao.newSession("1", 1).should > 0
-    timeNow = Date.new().to_time.to_i
-    verifySession(@sessionDao.getSessionById("1"), "1", 1, 'active', timeNow, 0) 
-  end
-	
+	it "Create a persistent session" do
+	  session = @sessionDao.newSession(1, true)
+		verifySession(session, session.id, session.token, 1, 'active', true)
+	end
+
+  it "Get an existing sessin" do
+	  session = @sessionDao.getSessionByToken(@token)
+		verifySession(session, @id, @token, 1, 'active', false) 
+	end
+
+	it "Update an existing session" do
+	  id = @sessionDao.updateSession(@token)
+		id.should_not eq @id
+		@id = id
+		session = @sessionDao.getSessionByToken(@token)
+		verifySession(session, @id, @token, 1, 'active', false)
+	end
+
   it "Close a session" do
-    @sessionDao.newSession("1", 1)
-    timeNow = Time.now.to_i
-    @sessionDao.closeSession("1").should be 1
+    @sessionDao.closeSession(@token).should be 1
     
-    session = @sessionDao.getSessionById("1")
-    verifySession(session, "1", 1, 'closed', session.start_time, timeNow) 
+    session = @sessionDao.getSessionByToken(@token)
+    verifySession(session, @id, @token, 1, 'closed', false)
 	end
 
 	it "Expire a session" do
-    @sessionDao.newSession("1", 1)
-    timeNow = Time.now.to_i
-    @sessionDao.expireSession("1").should be 1
+    @sessionDao.expireSession(@token).should be 1
     
-    session = @sessionDao.getItemById("1")
-    verifySession(session, "1", 1, 'expired', session.start_time, timeNow) 
+    session = @sessionDao.getSessionByToken(@token)
+    verifySession(session, @id, @token, 1, 'expired', false)
 	end
-
 end

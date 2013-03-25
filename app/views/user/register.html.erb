@@ -1,23 +1,33 @@
+<% javascript 'user/register.js' %>
+
 <div data-role="content" style="text-align:center" id="BiggerFont">
   <h1>Welcome to Mobile Learning</h1>
 
-  <table cellspacing="10" style="margin-left:auto; margin-right:auto"> 
-    <form action="/user/register" method="POST">
-      <tr><td align="left">
-          <input type="text" name="name" id="name" value="" placeholder="Enter user name"/>
-      </td></tr>
-      
-      <tr><td align="left">
-          <input type="text" name="email" id="email" value="" placeholder="Enter email address"/>
-      </td></tr>
-      
-      <tr><td align="left">
-          <input type="password" name="password" id="password" value="" placeholder="Enter password"/>
-      </td></tr>
-      
-      <tr><td>
-          <input type="submit" value="Register" data-theme='b' data-corners="false" />
-      </td></tr>
-    </form> 
+  <h3><span id="errorMsg" style="color:red"><%= @msg %></span></h3>
+
+  <table cellspacing="10" style="margin-left:auto; margin-right:auto">
+    <tr><td align="left">
+        <label for="name" class="ui-hidden-accessible">Name</label>
+        <input type="text" name="name" id="name" value="" placeholder="Enter user name"/>
+    </td></tr>
+    
+    <tr><td align="left">
+        <label for="email" class="ui-hidden-accessible">Email</label>
+        <input type="text" name="email" id="email" value="" placeholder="Enter email address"/>
+    </td></tr>
+    
+    <tr><td align="left">
+        <label for="password" class="ui-hidden-accessible">Passwrd</label>
+        <input type="password" name="password" id="password" value="" placeholder="Enter password"/>
+    </td></tr>
+
+    <tr><td align="left">
+        <label for="password" class="ui-hidden-accessible">Password Again</label>
+        <input type="password" name="password2" id="password2" value="" placeholder="Enter password"/>
+    </td></tr>
+    
+    <tr><td>
+        <input type="submit" id = "submit" name="register" value="Register" data-theme='b' data-corners="false" />
+    </td></tr>
   </table>
 </div>
