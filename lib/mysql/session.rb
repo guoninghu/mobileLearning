@@ -69,5 +69,9 @@ module MySqlDB
     def invalidSession(token)
       write("update session set status='invalid', end_time=now() where token='#{token}'") 
     end
+
+    def setSessionAmateur(token, amateur)
+      write("update session set amateur=#{amateur} where token='#{token}'")
+    end
   end
 end

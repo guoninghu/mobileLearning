@@ -39,7 +39,7 @@ module MySqlDB
  	end
   
   class UserAmateur
-    attr_reader :user, :amateurs
+    attr_reader :user, :names, :ids
     @@amateurDao = AmateurDAO.new
     @@userDao = UserDAO.new
 
@@ -49,7 +49,8 @@ module MySqlDB
     end
     
     def getAmateurs
-      @amateurs = {}
+      @names = {}
+      @ids = {}
       @defaultAmateur = nil
 
       amateurs = @@amateurDao.read("select a.id, a.name, b.username from amateur a join user b on a.user = b.id where b.id = #{@user}")
@@ -61,12 +62,13 @@ module MySqlDB
       end
       amateurs.each do |amateur|
         @defaultAmateur = amateur[0].to_i if @username == amateur[1]
-        @amateurs[amateur[0].to_i] = amateur[1]
+        @ids[amateur[0].to_i] = amateur[1]
+        @names[amateur[1]] = amateur[0].to_i
       end
     end
 
     def hasAmateur(name)
-      amateurs.values.include?(name)
+      @names.include?(name)
     end
 
     def addAmateur(name)
@@ -85,7 +87,7 @@ module MySqlDB
 
     def getCurrentAmateur(current)
       return nil if @username.nil?
-      return amateurs[current] if amateurs.has_key?(current)
+      return @ids[current] if @ids.has_key?(current)
       addAmateur(@username)
       getAmateurs
       return @username

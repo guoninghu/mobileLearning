@@ -1,0 +1,17 @@
+<h2 style="color:Maroon; margin-left:50px">Select Amateur</h2>
+<div style="margin-left: 40px">
+  <div class="ui-grid-b">
+    <% 0.upto(@names.size-1) do |n| %>
+      <% if (n%3) == 0 %>
+        <% str = "ui-block-a" %>
+      <% elsif (n%3) == 1 %>
+        <% str = "ui-block-b" %>
+      <% else %>
+        <% str = "ui-block-c" %>
+      <% end %>
+      <div class="<%= str %>"><div class="ui-bar" style="height:60px">
+          <a href="<%= "/learning/list?amateur=#{@nameHash[@names[n]]}" %>" target="_self" data-role="button" data-theme='c'><%= @names[n] %></a>
+      </div></div>
+    <% end %>
+  </div><!-- /grid-c -->
+</div>

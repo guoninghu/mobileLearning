@@ -1,6 +1,5 @@
 $('document').ready(function() {
   $('#submit').click(function() {
-    alert("OK");
     $.ajax({url: "/user/register",
       type: 'POST',
       beforeSend: function(xhr) {
@@ -13,7 +12,6 @@ $('document').ready(function() {
         password2: $.trim($("#password2").val())
       },
       success: function(data) {
-        alert(data);
         if (data["errorMsg"] == null) {
           window.location.href = "/";
         } else {

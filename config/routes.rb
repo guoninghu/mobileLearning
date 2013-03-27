@@ -66,6 +66,15 @@ MobileLearning::Application.routes.draw do
     end
   end
 
+	resources :amateur do
+	  collection do
+		  get 'select'
+			get 'edit'
+			post 'add'
+			post 'delete'
+		end
+	end
+
   resources :learning do
     collection do
       get 'list'

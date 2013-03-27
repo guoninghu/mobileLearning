@@ -47,14 +47,17 @@ class ApplicationController < ActionController::Base
         session = nil
         @@session.delete(token)
       else
+        if !params[:amateur].nil?
+          sessionDao.setSessionAmateur(token, params[:amateur])
+           session = sessionDao.getSessionByToken(token)
+           @@sessions[token] = session
+        end
         @@users[session.user] = @user
         @name = @user.getCurrentAmateur(session.amateur)
         if @name.nil?
           sessionDao.expireSession(token)
           session = nil
           @@session.delete(token)
-        else
-          @name[0] = @name[0].upcase
         end
       end
     end

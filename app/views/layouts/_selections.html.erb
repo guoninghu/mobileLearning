@@ -1,0 +1,12 @@
+<% config[:data_mini] = false if config[:data_mini].nil? %>
+<fieldset data-role="controlgroup" data-type="horizontal" data-mini="<%= config[:data_mini] %>">
+  <% 0.upto(config[:options].length-1) do |index| %>
+    <% checked = (config[:targetOptions].include?(config[:options][index])) ? "checked" : "" %>
+    <% id = "#{config[:name]}_option_#{index}" %>
+    <% cols = config[:options].length - (index/config[:columns]).to_i * config[:columns] %>
+    <% cols = config[:columns] if cols > config[:columns] %>
+    <% width = (config[:totalWidth]/cols).to_i - 1 %> 
+    <input type="<%= config[:type] %>" name="<%= config[:name] %>" value="<%= config[:options][index] %>" id="<%= id %>" data-mini="<%= config[:data_mini] %>" <%= checked %> >
+    <label for="<%= id %>" style="<%= "width:#{width}px" %>"><%= config[:options][index] %></label>
+  <% end %>
+</fieldset><!-- /controlgroup -->

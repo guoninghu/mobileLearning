@@ -1,0 +1,23 @@
+<h2 style="color:Maroon; margin-left:50px">Delete Amateur</h2>
+<div style="margin-left: 40px; width:610px">
+  <%= form_tag("/amateur/delete") do %>
+    <%= render "layouts/selections", config: {type: "checkbox", name: "amateur[]", options: @names, targetOptions: [], columns: 3, totalWidth: 600} %>
+    <div style="width:200px">
+      <input type="submit" id="delete" name="delete" value="Delete" data-theme='b' data-corners="false" />
+    </div>
+  <% end %>
+</div>
+
+<h2 style="color:Maroon; margin-left:50px; margin-top:50px">Add New Amateur</h2>
+<div style="margin-left:40px; width:400px">
+  <%= form_tag("/amateur/add") do %>
+    <input type="text" name="new_amateur" id="new_amateur" value="" placeholder="Enter amateur" maxlength='32'/>
+    <div style="width:200px">
+      <input type="submit" id="add" name="add" value="Add" data-theme='b' data-corners="false" />
+    </div>
+  <% end %>
+</div>
+
+<div style="margin-left:40px; margin-top:50px; width:200px">
+  <a href="/amateur/select" target="_self" data-role="button" data-theme='a'>Done</a>
+</div>
