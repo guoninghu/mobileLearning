@@ -65,7 +65,7 @@ class ApplicationController < ActionController::Base
     if (@amateur != @session.amateur)
       @@sessionDao.setSessionAmateur(@session.token, @amateur)
       @session = @@sessionDao.getSessionByToken(@session.token)
-      @@sessions[session.token] = @session
+      @@sessions[@session.token] = @session
     end
   end
 end
