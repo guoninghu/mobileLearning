@@ -3,14 +3,14 @@ require_relative './connection'
 module MySqlDB
 
   class Word
-    attr_reader :id, :word, :grade, :picture, :timestamp
+    attr_reader :id, :word, :grade, :picture, :audio, :timestamp
 
     def initialize(word)
-      @id, @word, @grade, @picture, @timestamp = word[0].to_i, word[1], word[2].to_i, word[3], word[4]
+      @id, @word, @grade, @picture, @audio, @timestamp = word[0].to_i, word[1], word[2].to_i, word[3], word[4], word[5].to_i
     end
 
     def to_json
-      {id: @id, word: @word, grade: @grade, picture: @picture, timestamp: @timestamp}.to_json
+      {id: @id, word: @word, grade: @grade, picture: @picture, audio: @audio, timestamp: @timestamp}.to_json
     end
   end
   
@@ -18,7 +18,7 @@ module MySqlDB
     @@words = [[], [], [], [], [], [], [], []]
 
     def initialize
-      super("select id, word, grade, picture, timestamp from word where ")
+      super("select id, word, grade, picture, audio, timestamp from word where ")
       if @@words[0].length == 0
         puts "Load words"
         getItems("id > 0").each {|word| @@words[word.grade-1] << word}

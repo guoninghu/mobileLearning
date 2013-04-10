@@ -7,6 +7,43 @@ var qId;
 var targetIndex;
 var questionIndex;
 var grade;
+var targetDisplay;
+var competitorDisplay;
+
+function htmlWord(word) {
+  var target = word;
+  target[0] = target[0].toUpperCase();
+  return '<h1 style="color:Maroon; margin-left:50px">' + target + '</h1>';
+}
+
+function htmlImage(image) {
+  var targetImage = "/assets/vocabPics/" + image;
+  return '<img height="160" src="' + targetImage + '">';
+}
+
+function htmlAudio(audio) {
+  var targetAudio = "/audios/vocabAudios/" + audio;
+  return '<audio id="targetAudio" src="' + targetAudio + '.mp3"></audio>' +
+    '<div style="margin:20px 0 20px 60px;"><a onclick="playAudio(\'#targetAudio\')"><img height="90" src="/assets/icons/sound.png"></a></div>';
+}
+
+function playAudio(id) {
+  $('#targetAudio')[0].play();
+  return false;
+}
+
+function updateHtml(id, word, type) {
+  if (type == 2) {
+    var content = htmlWord(word.word);
+    $(id).html(content);
+  } else if (type == 1) {
+    content = htmlImage(word.grade + "/" + word.picture);
+    $(id).html(content);
+  } else if (type == 3) {
+    content = htmlAudio(word.grade + "/" + word.audio);
+    $(id).html(content);
+  }
+}
 
 function setQuestion() {
   qId = questionIds[questionIndex];
@@ -15,9 +52,7 @@ function setQuestion() {
   var qWordIds = question.words;
   
   // Update target word
-  var target = words[qWordIds[0]].word;
-  target[0] = target[0].toUpperCase();
-  $('#targetWord').html(target);
+  updateHtml('#targetWord', words[qWordIds[0]], targetDisplay);
 
   $('#answerTrueImage').attr('style', 'display:none');
   $('#answerFalseImage').attr('style', 'display:none');
@@ -28,9 +63,9 @@ function setQuestion() {
     if (order[i] == 0) targetIndex = i+1;
 
     var wordId = qWordIds[order[i]];
-    targetImage = "/assets/vocabPics/" + grade + "/" + words[wordId].picture;
     var answerId = '#answer' + (i+1);
-    $(answerId).html('<img height="160" src="' + targetImage + '">');
+    updateHtml(answerId, words[wordId], competitorDisplay);
+    
     $(answerId).parent().buttonMarkup({"theme":"e"});
     $(answerId).buttonMarkup({"theme":"e"}).button("refresh");
   }
@@ -44,11 +79,19 @@ $('document').ready(function() {
   grade = $('#grade').attr('value');
 
   $.ajax({url: '/questionset/' + qSetTypeId + '/start?grade='+grade, success: function(data) {
-    words = data["words"];
+      words = data["words"];
       questions = data["questions"];
       questionIds = data["questionIds"];
       questionSetId = data["questionSetId"];
       questionIndex = 0;
+
+      if (data["qType"] == 1) {
+        targetDisplay = 2;
+        competitorDisplay = 1;
+      } else if (data["qType"] == 2) {
+        targetDisplay = 3;
+        competitorDisplay = 1;
+      }
    
       setQuestion();
       

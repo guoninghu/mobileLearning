@@ -52,7 +52,7 @@ module MySqlDB
         questions[qId] = {words: wordIds[n*order.length, order.length], order: order }
       end
 
-      return {words: words, questions: questions, questionIds: qIds, questionSetId: setId}
+      return {words: words, questions: questions, questionIds: qIds, questionSetId: setId, qType: qSetType.questionType}
     end
   end
 end
