@@ -23,9 +23,11 @@
     <div class=<%= "ui-grid-#{@rowClass}" %>>
       <% 1.upto(@cols) do |col| %>
         <% index = (row-1)*@cols + col %>
-        <div class=<%= "ui-block-#{@colClass[col-1]}" %> style=<%= "width:45%; margin-left:30px" %>>
-          <button id=<%= "answer#{index}" %> class="submit" data-theme="e" value="<%= index %>"><img height="160" src=""></button>
-        </div>
+        <% if (index <= @items) %>
+          <div class=<%= "ui-block-#{@colClass[col-1]}" %> style=<%= "width:45%; margin-left:30px" %>>
+            <button id=<%= "answer#{index}" %> class="submit" data-theme="e" value="<%= index %>"><img height="160" src=""></button>
+          </div>
+        <% end %>
       <% end %>
     </div>
     <br/>

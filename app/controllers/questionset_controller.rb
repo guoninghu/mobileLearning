@@ -10,14 +10,14 @@ class QuestionsetController < ApplicationController
     qSetType = MySqlDB::QuestionSetTypeDAO.new.getItemById(params[:id].to_i)
     
     if qSetType.numCompetitors == 3
-      @rows, @cols = 2, 2
+      @rows, @cols, @items = 2, 2, 4
       @rowClass = "b"
     elsif qSetType.numCompetitors == 1
-      @rows, @cols = 2, 1
+      @rows, @cols, @items = 2, 1, 2
       @rowClass = "b"
     elsif qSetType.numCompetitors == 2
-      @rows, @cols = 3, 1
-      @rowClass = "c"
+      @rows, @cols, @items = 2, 2, 3
+      @rowClass = "b"
     end
   end
 
