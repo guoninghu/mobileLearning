@@ -38,7 +38,7 @@ module MySqlDB
 
       words = {}
       wordIds = []
-      WordDAO.new.getRandomWords(grade, qSetType.numTargets, qSetType.numCompetitors).each{|word|
+      WordDAO.new.getRandomWords(grade, qSetType.questionType, qSetType.numTargets, qSetType.numCompetitors).each{|word|
         wordIds << word.id
         words[word.id] = word
       }

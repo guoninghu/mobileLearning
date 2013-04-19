@@ -17,14 +17,18 @@ function htmlWord(word) {
 }
 
 function htmlImage(image) {
-  var targetImage = "/assets/vocabPics/" + image;
+  var targetImage = "/images/" + image;
   return '<img height="160" src="' + targetImage + '">';
 }
 
-function htmlAudio(audio) {
-  var targetAudio = "/audios/vocabAudios/" + audio;
-  return '<audio id="targetAudio" src="' + targetAudio + '.mp3"></audio>' +
-    '<div style="margin:20px 0 20px 60px;"><a onclick="playAudio(\'#targetAudio\')"><img height="90" src="/assets/icons/sound.png"></a></div>';
+function htmlAudio(audio, target) {
+  var targetAudio = "/audios/" + audio;
+  return '<audio id="targetAudio" src="' + targetAudio + '"></audio>' +
+    '<div style="margin:0 0 0px 60px;">' + 
+    '<a onclick="playAudio(\'#targetAudio\')">' +
+    '<h1><img height="60" align="middle" src="/assets/icons/sound.png">' + 
+    '<span id="showTargetWord" style="display:none">' + target + '</span>' +
+    '</a></h1></div>';
 }
 
 function playAudio(id) {
@@ -37,10 +41,10 @@ function updateHtml(id, word, type) {
     var content = htmlWord(word.word);
     $(id).html(content);
   } else if (type == 1) {
-    content = htmlImage(word.grade + "/" + word.picture);
+    content = htmlImage(word.picture);
     $(id).html(content);
   } else if (type == 3) {
-    content = htmlAudio(word.grade + "/" + word.audio);
+    content = htmlAudio(word.audio, word.word);
     $(id).html(content);
   }
 }
@@ -110,6 +114,7 @@ $('document').ready(function() {
     var str = (questionIndex < questionIds.length) ? "Next" : "Done"; 
     $('#nextQuestionIcon').html(str).button("refresh");
     $('#nextQuestion').attr("style", "");
+    $('#showTargetWord').attr("style", "color:Maroon; margin-left:30px");
         
     var answerId = "answer" + targetIndex;
     $('#' + answerId).parent().removeClass('ui-btn-hover-e').removeClass('ui-btn-up-e').addClass('ui-btn-up-b').buttonMarkup({"theme":"b"});

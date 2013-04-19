@@ -7,6 +7,8 @@ module MySqlDB
 
     def initialize(word)
       @id, @word, @grade, @picture, @audio, @timestamp = word[0].to_i, word[1], word[2].to_i, word[3], word[4], word[5].to_i
+      @picture = @picture[0].downcase + "/" + @picture
+      @audio = @audio[0].downcase + "/" + @audio if !@audio.nil?
     end
 
     def to_json
@@ -15,13 +17,19 @@ module MySqlDB
   end
   
   class WordDAO < ItemDAO
-    @@words = [[], [], [], [], [], [], [], []]
+    @@words = []
+    @@indices = {}
 
     def initialize
       super("select id, word, grade, picture, audio, timestamp from word where ")
-      if @@words[0].length == 0
+      if @@words.length == 0
         puts "Load words"
-        getItems("id > 0").each {|word| @@words[word.grade-1] << word}
+        getItems("id > 0").each do |word|
+          grade = word.grade
+          @@indices[grade] = [] if @@indices[grade].nil?
+          @@indices[grade] << @@words.length
+          @@words << word
+        end
       end
     end
 
@@ -32,47 +40,46 @@ module MySqlDB
 		def getWordByText(word)
 			getItem("word='#{word}'")
 		end
-=begin
-    def addWord(word, grade, picture)
-      return true if getWordByText(word)
-      write("insert ignore into word (word, grade, picture) value('#{word}', #{grade}, '#{picture}')")
-    end
-
-    def addWords(words, grade)
-      values = []
-      words.each {|word| values << "('#{word.downcase}', #{grade}, '#{word.downcase}.jpg')" }
-      write("insert ignore into word (word, grade, picture) values #{values.join(",")}")
-    end
-
-    def initialWords
-			addWords(JSON.parse(IO.read(File.dirname(__FILE__) + "/../../app/assets/wordList.js")))
-    end
-=end
-    def randomIndex(len, numTargets, numComps)
-      ret_val = []
-      targets = []
-      indices = (0..len-1).to_a
-      while (true)
-        values = indices.shuffle[0, numComps+1]
-        next if targets.include?(values[0])
-        targets << values[0]
-        ret_val = ret_val.concat(values)
-        return ret_val if targets.length == numTargets
-      end
-    end
-
-    def getRandomWords(grade, numTargets, numComps)
-      words = @@words[grade-1]
-      return [] if words.length < 2
+    
+    # retrun a list of indices of target words
+    def getRandomTarget(grade, type, num)
+      indices = @@indices[grade].shuffle
       
-      numTargets = words.length if (numTargets > words.length)
+      retVal = []
+      indices.each do |index|
+        break retVal if retVal.length >= num
+        next if (type == 2) && @@words[index].audio.nil?
+        retVal << index
+      end
+
+      return retVal
+    end
+    
+    def getRandomCompetitor(targets, numComps)
+      retVal = []
+      targets.each do |target|
+        retVal << target
+        count = 0
+        (0..@@words.length-1).to_a.shuffle[0, numComps+1].each do |index|
+          next if index == target
+          retVal << index
+          count += 1
+          break if count >= numComps
+        end
+      end
+
+      return retVal
+    end
+
+    def getRandomWords(grade, type, numTargets, numComps)
+      numTargets = @@indices[grade].length if (numTargets > @@indices[grade].length)
       numComps = 1 if numComps < 1
       numComps = 3 if numComps > 3
-      numComps = words.length - 1 if numComps >= words.length
 
+      targets = getRandomTarget(grade, type, numTargets)
       ret_val = []
-      randomIndex(words.length, numTargets, numComps).each do |val|
-        ret_val << words[val]
+      getRandomCompetitor(targets, numComps).each do |val|
+        ret_val << @@words[val]
       end
 
       return ret_val
