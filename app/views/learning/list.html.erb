@@ -1,71 +1,47 @@
-<% javascript 'learning/list.js' %>
-
 <div data-role="content" id="BiggerFont">
-  <div class="ui-grid-a">
-    <div class="ui-block-a" style="width:70%"><h1><span style="color:Maroon">Choose a game to play</span></h1></div>
-    <div class="ui-block-b" style="width:25%">
-      <select name="grade" id="grade" data-inline="true">
-        <option value="basic">Basic</option>
-        <option value="3rdgrade">3rd Grade</option>
-      </select>
-    </div>
-  </div><!-- /grid-a -->
+  <h1><span style="color:Maroon">Welcome to Mobile Learning</span></h1>
   
-  <div id="basic">
-    <table cellspacing="30" style="margin-left:auto; margin-right:auto"> 
-      <tr>
-        <td>
-          <a href="/questionset/2/ask?grade=0" data-role="button" data-theme='b' target='_self'>Word Text-Picture Matching Simple</a>
-        </td>
-        <td>
-          <a href="/questionset/5/ask?grade=0" data-role="button" data-theme='b' target='_self'>Word Audio-Picture Matching Simple</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/questionset/3/ask?grade=0" data-role="button" data-theme='b' target='_self'>Word Text-Picture Matching Intermediate</a>
-        </td>
-        <td>
-          <a href="/questionset/6/ask?grade=0" data-role="button" data-theme='b' target='_self'>Word Audio-Picture Matching Intermediate</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/questionset/1/ask?grade=0" data-role="button" data-theme='b' target='_self'>Word Text-Picture Matching Advanced</a>
-        </td>
-        <td>
-          <a href="/questionset/4/ask?grade=0" data-role="button" data-theme='b' target='_self'>Word Audio-Picture Matching Advanced</a>
-        </td>
-      </tr>
-    </table>
-  </div>
+  <div data-role="collapsible" data-theme='b' data-collapsed='false'>
+    <h3>Word</h3>
+    <%= form_tag({controller: "questionset", action: "ask"}, {target: "_self"}) do %>
+      <table cellspacing="10" style="margin-left:30; margin-right:auto">
+        <tr><td align="left">
+            <label for="game" class="select">Game:</label>
+            <select name="game" id="game">
+              <option value="1">Text Picture Matching</option>
+              <option value="2">Audio Picture Matching</option>
+            </select>
+        </td></tr>
+        
+        <tr><td align="left">
+            <label for="grade" class="select">Grade:</label>
+            <select name="grade" id="grade">
+              <option value="0">K</option>
+              <option value="3">3</option>
+            </select>
+        </td></tr>
 
-  <div id="3rdgrade" style="display:none">
-    <table cellspacing="10" style="margin-left:auto; margin-right:auto"> 
-      <tr>
-        <td>
-          <a href="/questionset/2/ask?grade=3" data-role="button" data-theme='b' target='_self'>Word Text-Picture Matching Simple</a>
-        </td>
-        <td>
-          <a href="/questionset/5/ask?grade=3" data-role="button" data-theme='b' target='_self'>Word Audio-Picture Matching Simple</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/questionset/3/ask?grade=3" data-role="button" data-theme='b' target='_self'>Word Text-Picture Matching Intermediate</a>
-        </td>
-        <td>
-          <a href="/questionset/6/ask?grade=3" data-role="button" data-theme='b' target='_self'>Word Audio-Picture Matching Intermediate</a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/questionset/1/ask?grade=3" data-role="button" data-theme='b' target='_self'>Word Text-Picture Matching Advanced</a>
-        </td>
-        <td>
-          <a href="/questionset/4/ask?grade=3" data-role="button" data-theme='b' target='_self'>Word Audio-Picture Matching Advanced</a>
-        </td>
-      </tr>
-    </table>
+        <tr><td align="left">
+            <label for="difficulty" class="select">Difficulty:</label>
+            <select name="difficulty" id="difficulty">
+              <option value="0">Simple</option>
+              <option value="1">Intermediate</option>
+              <option value="2">Advanced</option>
+            </select>
+        </td></tr>
+
+        <tr><td align="left">
+            <input type="submit" id = "submit" name="Play" value="Play" data-theme='e' data-corners="false" />
+        </td></tr>
+      </table>
+    <% end %>
+  </div>
+  <div data-role="collapsible" data-theme='b'>
+    <h3>Math</h3>
+    <div data-role="collapsible" data-theme='c'>
+      <h4>Decimal Fraction</h4>
+      <a href="/math/teach?topic=decimal_fraction&level=intro" data-role="button" data-theme='e' data-icon="arrow-r" target='_self'>Introduction</a>
+    </div>
   </div>
 </div>
+

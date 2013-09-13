@@ -7,7 +7,30 @@ class QuestionsetController < ApplicationController
   def ask
     @image = ["smiley", "sad"]
     @colClass = ["a", "b", "c"]
-    qSetType = MySqlDB::QuestionSetTypeDAO.new.getItemById(params[:id].to_i)
+
+    if request.method == 'POST'
+      if params[:game] == "1"
+        if params[:difficulty] == "2"
+          @id = 1
+        elsif params[:difficulty] == "0"
+          @id = 2
+        else
+          @id = 3
+        end
+      else
+        if params[:difficulty] == "2"
+          @id = 4
+        elsif params[:difficulty] == "0"
+          @id = 5
+        else
+          @id = 6
+        end
+      end
+    else
+      @id = params[:id]
+    end
+    
+    qSetType = MySqlDB::QuestionSetTypeDAO.new.getItemById(@id)
     
     if qSetType.numCompetitors == 3
       @rows, @cols, @items = 2, 2, 4

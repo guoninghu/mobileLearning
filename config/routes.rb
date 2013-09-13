@@ -62,20 +62,28 @@ MobileLearning::Application.routes.draw do
       get 'logout'
       get 'register'
       post 'login'
-			post 'register'
+      post 'register'
+    end
+  end
+  
+  resources :amateur do
+    collection do
+      get 'select'
+      get 'edit'
+      post 'add'
+      post 'delete'
     end
   end
 
-	resources :amateur do
-	  collection do
-		  get 'select'
-			get 'edit'
-			post 'add'
-			post 'delete'
-		end
-	end
-
   resources :learning do
+    collection do
+      get 'list'
+      get 'word'
+      get 'math'
+    end
+  end
+  
+  resources :reward do
     collection do
       get 'list'
     end
@@ -89,9 +97,19 @@ MobileLearning::Application.routes.draw do
 
   resources :questionset do
     member do
-			get 'ask'
+      get 'ask'
       get 'start'
       get 'summary'
+    end
+    collection do
+      get 'ask'
+      post 'ask'
+    end
+  end
+
+  resources :math do
+    collection do
+      get 'teach'
     end
   end
 

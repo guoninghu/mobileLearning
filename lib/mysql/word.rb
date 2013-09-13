@@ -7,7 +7,7 @@ module MySqlDB
 
     def initialize(word)
       @id, @word, @grade, @picture, @audio, @timestamp = word[0].to_i, word[1], word[2].to_i, word[3], word[4], word[5].to_i
-      @picture = @picture[0].downcase + "/" + @picture
+      @picture = @picture[0].downcase + "/" + @picture if !@picture.nil?
       @audio = @audio[0].downcase + "/" + @audio if !@audio.nil?
     end
 
@@ -18,17 +18,36 @@ module MySqlDB
   
   class WordDAO < ItemDAO
     @@words = []
-    @@indices = {}
+    @@indices = {
+      "all" => {"all" => [], "audio" => [], "image" => [], "both" => []}
+    }
 
     def initialize
       super("select id, word, grade, picture, audio, timestamp from word where ")
       if @@words.length == 0
         puts "Load words"
-        getItems("id > 0").each do |word|
+        getItems("id > 0").each { |word| @@words << word }
+
+        0.upto(@@words.length - 1) do |n|
+          word = @@words[n]
           grade = word.grade
-          @@indices[grade] = [] if @@indices[grade].nil?
-          @@indices[grade] << @@words.length
-          @@words << word
+
+          @@indices[grade] = {"all" => [], "audio" => [], "image" => [], "both" =>[]} if @@indices[grade].nil?
+
+          @@indices["all"]["all"] << n
+          @@indices[grade]["all"] << n
+
+          if !word.picture.nil?
+            @@indices["all"]["image"] << n
+            @@indices[grade]["image"] << n
+            if !word.audio.nil?
+              @@indices["all"]["both"] << n
+              @@indices[grade]["both"] << n
+            end
+          elsif !word.audio.nil?
+            @@indices["all"]["audio"] << n
+            @@indices[grade]["audio"] << n
+          end
         end
       end
     end
@@ -43,12 +62,12 @@ module MySqlDB
     
     # retrun a list of indices of target words
     def getRandomTarget(grade, type, num)
-      indices = @@indices[grade].shuffle
+      indices = (type == 2) ? @@indices[grade]["both"].shuffle :
+        @@indices[grade]["image"].shuffle
       
       retVal = []
       indices.each do |index|
         break retVal if retVal.length >= num
-        next if (type == 2) && @@words[index].audio.nil?
         retVal << index
       end
 
@@ -56,12 +75,17 @@ module MySqlDB
     end
     
     def getRandomCompetitor(targets, numComps)
-      retVal = []
+      indices = @@indices["all"]["image"].shuffle
+
+      retVal, pos = [], 0
       targets.each do |target|
         retVal << target
         count = 0
-        (0..@@words.length-1).to_a.shuffle[0, numComps+1].each do |index|
+        while pos < indices.size
+          index = indices[pos]
+          pos += 1
           next if index == target
+
           retVal << index
           count += 1
           break if count >= numComps
@@ -72,7 +96,6 @@ module MySqlDB
     end
 
     def getRandomWords(grade, type, numTargets, numComps)
-      numTargets = @@indices[grade].length if (numTargets > @@indices[grade].length)
       numComps = 1 if numComps < 1
       numComps = 3 if numComps > 3
 
