@@ -5,7 +5,7 @@ require 'mysql/word'
 
 class QuestionsetController < ApplicationController
   def ask
-    @image = ["smiley", "sad"]
+    @image = ["congratulate2.gif", "sad.jpg"]
     @colClass = ["a", "b", "c"]
 
     if request.method == 'POST'

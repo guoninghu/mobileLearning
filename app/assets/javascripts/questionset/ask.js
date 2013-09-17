@@ -31,6 +31,14 @@ function htmlAudio(audio, target) {
     '</a></h1></div>';
 }
 
+function playTrueAudio() {
+  $('#trueAudio')[0].play();
+}
+
+function playFalseAudio() {
+  $('#falseAudio')[0].play();
+}
+
 function playAudio(id) {
   $('#targetAudio')[0].play();
   return false;
@@ -108,6 +116,12 @@ $('document').ready(function() {
     submitted = true;
 
     var answer = $(this).val();
+    if (parseInt(answer) == targetIndex) {
+      playTrueAudio();
+    } else {
+      playFalseAudio();
+    }
+
     var imageId = (parseInt(answer) == targetIndex) ? "answerTrueImage" : "answerFalseImage";
     $('#' + imageId).attr("style", "");
 

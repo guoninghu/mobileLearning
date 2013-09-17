@@ -1,4 +1,5 @@
 require_relative './connection'
+require 'set'
 
 module MySqlDB
 
@@ -49,7 +50,31 @@ module MySqlDB
             @@indices[grade]["audio"] << n
           end
         end
+
+        readGroup
       end
+    end
+
+    def readGroup
+      @@groupIndices = {}
+      read("select word, `group` from word_group").each do |entity|
+        wid, gid = entity[0].to_i, entity[1].to_i
+        @@groupIndices[wid] = Set.new if @groupIndices[wid].nil?
+        @@groupIndices[wid] << gid
+      end
+    end
+
+    def sameGroup?(target, competitor)
+      s1 = @@groupIndices[target]
+      return false if s1.nil?
+      s2 = @@groupIndices[competitor]
+      return false if s2.nil?
+
+      s1.each do |gid|
+        return true if s2.include?(gid)
+      end
+
+      return false
     end
 
     def createItem(word)
@@ -85,6 +110,7 @@ module MySqlDB
           index = indices[pos]
           pos += 1
           next if index == target
+          next if sameGroup?(@@words[target].id, @@words[index].id)
 
           retVal << index
           count += 1
