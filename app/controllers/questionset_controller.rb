@@ -50,7 +50,7 @@ class QuestionsetController < ApplicationController
     grade = params[:grade].to_i
 
     qSetId = qSetDao.addQuestionSet(@session.id, @amateur, grade, typeId)
-    questionSet = qSetDao.createQuestions(typeId, grade, qSetId)
+    questionSet = qSetDao.createQuestions(@amateur, typeId, grade, qSetId)
 
     render json: questionSet, formats: [:json]
   end

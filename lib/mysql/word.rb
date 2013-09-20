@@ -18,7 +18,7 @@ module MySqlDB
   end
   
   class WordDAO < ItemDAO
-    @@words = []
+    @@words = {}
     @@indices = {
       "all" => {"all" => [], "audio" => [], "image" => [], "both" => []}
     }
@@ -27,27 +27,25 @@ module MySqlDB
       super("select id, word, grade, picture, audio, timestamp from word where ")
       if @@words.length == 0
         puts "Load words"
-        getItems("id > 0").each { |word| @@words << word }
+        getItems("id > 0").each { |word| @@words[word.id] = word }
 
-        0.upto(@@words.length - 1) do |n|
-          word = @@words[n]
+        @@words.each do |id, word|
           grade = word.grade
-
           @@indices[grade] = {"all" => [], "audio" => [], "image" => [], "both" =>[]} if @@indices[grade].nil?
 
-          @@indices["all"]["all"] << n
-          @@indices[grade]["all"] << n
+          @@indices["all"]["all"] << id
+          @@indices[grade]["all"] << id
 
           if !word.picture.nil?
-            @@indices["all"]["image"] << n
-            @@indices[grade]["image"] << n
+            @@indices["all"]["image"] << id
+            @@indices[grade]["image"] << id
             if !word.audio.nil?
-              @@indices["all"]["both"] << n
-              @@indices[grade]["both"] << n
+              @@indices["all"]["both"] << id
+              @@indices[grade]["both"] << id
             end
           elsif !word.audio.nil?
-            @@indices["all"]["audio"] << n
-            @@indices[grade]["audio"] << n
+            @@indices["all"]["audio"] << id
+            @@indices[grade]["audio"] << id
           end
         end
 
@@ -59,7 +57,7 @@ module MySqlDB
       @@groupIndices = {}
       read("select word, `group` from word_group").each do |entity|
         wid, gid = entity[0].to_i, entity[1].to_i
-        @@groupIndices[wid] = Set.new if @groupIndices[wid].nil?
+        @@groupIndices[wid] = Set.new if @@groupIndices[wid].nil?
         @@groupIndices[wid] << gid
       end
     end
@@ -85,26 +83,12 @@ module MySqlDB
 			getItem("word='#{word}'")
 		end
     
-    # retrun a list of indices of target words
-    def getRandomTarget(grade, type, num)
-      indices = (type == 2) ? @@indices[grade]["both"].shuffle :
-        @@indices[grade]["image"].shuffle
-      
-      retVal = []
-      indices.each do |index|
-        break retVal if retVal.length >= num
-        retVal << index
-      end
-
-      return retVal
-    end
-    
     def getRandomCompetitor(targets, numComps)
       indices = @@indices["all"]["image"].shuffle
 
       retVal, pos = [], 0
       targets.each do |target|
-        retVal << target
+        retVal << @@words[target]
         count = 0
         while pos < indices.size
           index = indices[pos]
@@ -112,7 +96,7 @@ module MySqlDB
           next if index == target
           next if sameGroup?(@@words[target].id, @@words[index].id)
 
-          retVal << index
+          retVal << @@words[index]
           count += 1
           break if count >= numComps
         end
@@ -121,17 +105,8 @@ module MySqlDB
       return retVal
     end
 
-    def getRandomWords(grade, type, numTargets, numComps)
-      numComps = 1 if numComps < 1
-      numComps = 3 if numComps > 3
-
-      targets = getRandomTarget(grade, type, numTargets)
-      ret_val = []
-      getRandomCompetitor(targets, numComps).each do |val|
-        ret_val << @@words[val]
-      end
-
-      return ret_val
+    def getWords(grade, type)
+      return (type == 2) ? @@indices[grade]["both"] : @@indices[grade]["image"]
     end
   end
 end

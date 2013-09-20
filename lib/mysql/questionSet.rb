@@ -1,5 +1,6 @@
 require_relative './connection'
 require_relative './questionSetType'
+require_relative './wordSelector'
 
 module MySqlDB
 
@@ -32,13 +33,13 @@ module MySqlDB
       insert("insert into question_set (session, user, grade, type) value('#{session}', #{user}, #{grade}, #{type})")
     end
 
-    def createQuestions(typeId, grade, setId)
+    def createQuestions(userId, typeId, grade, setId)
       qSetType = QuestionSetTypeDAO.new.getItemById(typeId)
       questionDao = QuestionDAO.new
 
       words = {}
       wordIds = []
-      WordDAO.new.getRandomWords(grade, qSetType.questionType, qSetType.numTargets, qSetType.numCompetitors).each{|word|
+      WordSelector.new.getRandomWords(userId, grade, qSetType.questionType, qSetType.numTargets, qSetType.numCompetitors).each{|word|
         wordIds << word.id
         words[word.id] = word
       }
