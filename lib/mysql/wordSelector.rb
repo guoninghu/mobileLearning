@@ -26,7 +26,7 @@ module MySqlDB
       end
 
       @words.getWords(grade, type).each do |word|
-        priorities[word] = WordResult.new([word, rand()/100.0]) if priorities[word].nil?
+        priorities[word] = WordResult.new([word, rand() * 0.2]) if priorities[word].nil?
       end
 
       pq = SimplePQueue.new(numTargets)

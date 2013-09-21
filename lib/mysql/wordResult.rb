@@ -8,9 +8,7 @@ module MySqlDB
     def initialize(word)
       if word.size >= 4
         @id, right_count, wrong_count, current_count = word[0].to_i, word[1].to_i, word[2].to_i, word[3].to_i
-        sum = right_count + wrong_count
-        @priority = (sum == 0) ? 0 : right_count.to_f / sum
-        @priority += rand()/100.0 + current_count
+        @priority = (right_count + wrong_count + current_count * 2) * 0.1 + rand() * 0.2;
       else
         @id, @priority = word[0].to_i, word[1].to_f
       end
