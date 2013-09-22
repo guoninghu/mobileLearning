@@ -1,0 +1,33 @@
+<div data-role="content" id="BiggerFont">
+  <h1><span style="color:Maroon">Achievements</span></h1>
+  
+  <div data-role="collapsible" data-theme='b' data-collapsed='false'>
+    <h3>Word</h3>
+    <table>
+      <% 0.upto(3) do |grade| %>
+        <tr><td align = "left">
+            <div data-role="collapsible" data-theme='e'>
+              <h4><%= @grades[grade] %></h4>
+              <div data-role = "collapsible" data-theme='c'>
+                <h5>Score: <%= @results[0][grade] + @results[1][grade] %></h5>
+                <p>Participate: <%= @results[0][grade] %><br/>
+                Correct Answer: <%= @results[1][grade] %></p>
+              </div>
+              <table>
+                <tr><td>
+                    <div data-role = "collapsible" data-theme='c'>
+                      <h5>Level: <%= @results[2][grade] %></h5>
+                      <p><%= @results[3][grade] %></p>
+                    </div>
+                  </td>
+                  <td valign='top', style='padding-top:10px'><img src='<%= @results[4][grade] %>', height='60'></img></td>
+              </tr></table>
+            </div>
+        </td></tr>
+        
+      <% end %>
+    </table>
+  </div>
+</div>
+
+

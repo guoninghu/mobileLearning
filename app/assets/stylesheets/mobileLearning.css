@@ -9,3 +9,7 @@
 #BiggerFont .h1 {
   font-size:250%;
 }
+
+.ui-icon-achievement-P {
+	background-image: url("/assets/achievements/P.jpg");
+}

@@ -1,6 +1,15 @@
 <div data-role="content" id="BiggerFont">
-  <h1><span style="color:Maroon">Welcome to Mobile Learning</span></h1>
-  
+  <div class="ui-grid-a">
+    <div class="ui-block-a">
+      <h1><span style="color:Maroon">Welcome to Mobile Learning</span></h1>
+    </div>
+    <div class="ui-block-b">
+      <div style="float:right">
+        <a href="/achievement/list" data-role="button" data-icon="gear" data-theme='b' class="ui-btn-right" style="margin-top:16px" target="_self">Achievement</a>
+      </div>
+    </div>
+  </div>
+
   <div data-role="collapsible" data-theme='b' data-collapsed='false'>
     <h3>Word</h3>
     <%= form_tag({controller: "questionset", action: "ask"}, {target: "_self"}) do %>

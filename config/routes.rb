@@ -83,7 +83,7 @@ MobileLearning::Application.routes.draw do
     end
   end
   
-  resources :reward do
+  resources :achievement do
     collection do
       get 'list'
     end
