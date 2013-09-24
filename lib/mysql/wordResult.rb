@@ -35,7 +35,7 @@ module MySqlDB
     end
 
     def readUser(userId, grade)
-      getItems(" user = #{userId}")
+      getItems(" a.user = #{userId} and b.grade = #{grade}")
     end
 
     def update(word, user, correct)
@@ -86,9 +86,9 @@ module MySqlDB
       val5 = [nil, nil, nil, nil]
       0.upto(3) do |grade|
         score = val1[grade] + val2[grade]
-        if score == @@levels[6]
+        if score >= @@levels[6]
           val3[grade] = @@names[6]
-          val5 = "/assets/achievements/#{@@thumbs[6]}.jpg"
+          val5[grade] = "/assets/achievements/#{@@thumbs[6]}.jpg"
         else
           0.upto(5) do |n|
             if @@levels[n] <= score
