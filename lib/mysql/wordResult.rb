@@ -20,9 +20,9 @@ module MySqlDB
   end
   
   class WordResultDAO < ItemDAO
-    @@words = [400, 720, 360, 180]
+    @@words = [400, 720, 360, 300]
     @@levels = [0, 50, 100, 200, 300, 500, 1000]
-    @@names = ["Basic", "Pawn", "Knight", "Bishop", "Rock", "Queen", "King"]
+    @@names = ["Basic", "Pawn", "Knight", "Bishop", "Rook", "Queen", "King"]
     @@thumbs = [nil, "P", "N", "B", "R", "Q", "K"]
 
     def initialize
@@ -76,7 +76,9 @@ module MySqlDB
       val2 = [0, 0, 0, 0]
       read(query).each do |entity|
         grade = entity[1].to_i
-        val2[grade] = (500.0 * entity[0].to_f / @@words[grade].to_f).to_i
+        tv = (500.0 * entity[0].to_f / @@words[grade].to_f).to_i
+        tv = 500 if tv > 500
+        val2[grade] = tv
       end
 
       val3 = ["Basic", "Basic", "Basic", "Basic"]
