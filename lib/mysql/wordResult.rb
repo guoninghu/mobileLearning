@@ -20,7 +20,7 @@ module MySqlDB
   end
   
   class WordResultDAO < ItemDAO
-    @@words = [400, 720, 360, 300]
+    @@words = [430, 720, 360, 320, 500]
     @@levels = [0, 50, 100, 200, 300, 500, 1000]
     @@names = ["Basic", "Pawn", "Knight", "Bishop", "Rook", "Queen", "King"]
     @@thumbs = [nil, "P", "N", "B", "R", "Q", "K"]
@@ -63,7 +63,7 @@ module MySqlDB
     def getPoints(userId)
       query = "select sum(right_count + wrong_count), grade from word_result a " +
         "join word b on a.word = b.id where user = #{userId} group by grade"
-      val1 = [0, 0, 0, 0]
+      val1 = [0, 0, 0, 0, 0]
       read(query).each do |entity| 
         grade = entity[1].to_i
         tv = entity[0].to_i
@@ -73,7 +73,7 @@ module MySqlDB
 
       query =  "select count(*), grade from word_result a join word b on a.word = b.id " +
         "where user = #{userId} and current > 0 group by grade"
-      val2 = [0, 0, 0, 0]
+      val2 = [0, 0, 0, 0, 0]
       read(query).each do |entity|
         grade = entity[1].to_i
         tv = (500.0 * entity[0].to_f / @@words[grade].to_f).to_i
@@ -81,10 +81,10 @@ module MySqlDB
         val2[grade] = tv
       end
 
-      val3 = ["Basic", "Basic", "Basic", "Basic"]
-      val4 = [nil, nil, nil, nil]
-      val5 = [nil, nil, nil, nil]
-      0.upto(3) do |grade|
+      val3 = ["Basic", "Basic", "Basic", "Basic", "Basic"]
+      val4 = [nil, nil, nil, nil, nil]
+      val5 = [nil, nil, nil, nil, nil]
+      0.upto(4) do |grade|
         score = val1[grade] + val2[grade]
         if score >= @@levels[6]
           val3[grade] = @@names[6]

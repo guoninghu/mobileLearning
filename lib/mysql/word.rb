@@ -16,6 +16,48 @@ module MySqlDB
       {id: @id, word: @word, grade: @grade, picture: @picture, audio: @audio, timestamp: @timestamp}.to_json
     end
   end
+
+  class WordExclude < ItemDAO
+    def initialize
+      super("select word, `group` from word_group where ")
+      read_group
+    end
+
+    def read_group
+      groups, words = {}, {}
+      read("select word, `group` from word_group").each do |entity|
+        gid, wid = entity[1].to_i, entity[0].to_i
+        groups[gid] = Set.new if groups[gid].nil?
+        groups[gid] << wid
+
+        words[wid] = Set.new if words[wid].nil?
+        words[wid] << gid
+      end
+
+      eGroups = {}
+      read("select group1, group2 from group_exclude").each do |entity|
+        gid1, gid2 = entity[0].to_i, entity[1].to_i
+        eGroups[gid1] = gid2
+      end
+
+      @excludedWords = {}
+      words.each do |wid, gid|
+        @excludedWords[wid] = Set.new
+        @excludedWords[wid] != groups[gid]
+        if !eGroups[gid].nil?
+          eGroups[gid].each |gid2|
+          @excludedWords[wid] != groups[gid2]
+        end
+
+        @excludedWords[wid].delete(wid)
+      end
+    end
+
+    def excluded?(wid1, wid2)
+      return false if @excludedWords[wid1].nil?
+      return @excludedWords[wid1].include?(wid2)
+    end
+  end
   
   class WordDAO < ItemDAO
     @@words = {}
@@ -49,30 +91,12 @@ module MySqlDB
           end
         end
 
-        readGroup
-      end
-    end
-
-    def readGroup
-      @@groupIndices = {}
-      read("select word, `group` from word_group").each do |entity|
-        wid, gid = entity[0].to_i, entity[1].to_i
-        @@groupIndices[wid] = Set.new if @@groupIndices[wid].nil?
-        @@groupIndices[wid] << gid
+        @wordExclude = WordExclude.new
       end
     end
 
     def sameGroup?(target, competitor)
-      s1 = @@groupIndices[target]
-      return false if s1.nil?
-      s2 = @@groupIndices[competitor]
-      return false if s2.nil?
-
-      s1.each do |gid|
-        return true if s2.include?(gid)
-      end
-
-      return false
+      return @wordExclude.excluded?(target, competitor)
     end
 
     def createItem(word)
