@@ -17,28 +17,28 @@
         <tr><td align="left">
             <label for="game" class="select">Game:</label>
             <select name="game" id="game">
-              <option value="1">Text Picture Matching</option>
-              <option value="2">Audio Picture Matching</option>
+              <option value="1"<%=@game[0]%>>Text Picture Matching</option>
+              <option value="2"<%=@game[1]%>>Audio Picture Matching</option>
             </select>
         </td></tr>
         
         <tr><td align="left">
             <label for="grade" class="select">Grade:</label>
             <select name="grade" id="grade">
-              <option value="0">K</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
+              <option value="0"<%=@grade[0]%>>K</option>
+              <option value="1"<%=@grade[1]%>>1</option>
+              <option value="2"<%=@grade[2]%>>2</option>
+              <option value="3"<%=@grade[3]%>>3</option>
+              <option value="4"<%=@grade[4]%>>4</option>
             </select>
         </td></tr>
 
         <tr><td align="left">
             <label for="difficulty" class="select">Difficulty:</label>
             <select name="difficulty" id="difficulty">
-              <option value="0">Simple</option>
-              <option value="1">Intermediate</option>
-              <option value="2">Advanced</option>
+              <option value="0"<%=@difficulty[0]%>>Simple</option>
+              <option value="1"<%=@difficulty[1]%>>Intermediate</option>
+              <option value="2"<%=@difficulty[2]%>>Advanced</option>
             </select>
         </td></tr>
 

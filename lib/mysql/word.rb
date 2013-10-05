@@ -91,12 +91,12 @@ module MySqlDB
           end
         end
 
-        @wordExclude = WordExclude.new
+        @@wordExclude = WordExclude.new
       end
     end
 
     def sameGroup?(target, competitor)
-      return @wordExclude.excluded?(target, competitor)
+      return @@wordExclude.excluded?(target, competitor)
     end
 
     def createItem(word)

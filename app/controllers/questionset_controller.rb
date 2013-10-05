@@ -2,6 +2,7 @@ require "mysql/questionSet"
 require "mysql/questionSetType"
 require "mysql/question"
 require 'mysql/word'
+require 'mysql/wordSession'
 
 class QuestionsetController < ApplicationController
   def ask
@@ -9,6 +10,9 @@ class QuestionsetController < ApplicationController
     @colClass = ["a", "b", "c"]
 
     if request.method == 'POST'
+      wordSession = MySqlDB::WordSessionDAO.new
+      wordSession.setWordSession(@amateur, params[:game], params[:grade], params[:difficulty])
+
       if params[:game] == "1"
         if params[:difficulty] == "2"
           @id = 1
