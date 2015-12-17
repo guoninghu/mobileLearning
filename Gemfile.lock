@@ -55,6 +55,7 @@ GEM
       multi_json (~> 1.0)
     ffi (1.4.0)
     hike (1.2.1)
+    hpricot (0.8.6)
     i18n (0.6.1)
     journey (1.0.4)
     jquery-rails (2.2.1)
@@ -146,6 +147,7 @@ DEPENDENCIES
   bcrypt-ruby (~> 3.0.0)
   capybara
   coffee-rails (~> 3.2.1)
+  hpricot
   jquery-rails
   mysql
   rails (= 3.2.12)

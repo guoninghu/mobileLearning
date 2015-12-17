@@ -1,0 +1,33 @@
+<div data-role="content" style="text-align:center" id="BiggerFont">
+  <%= form_tag({controller: "spellingbee", action: "crawl"}, {target: "_self"}) do %>
+    <table cellspacing="10" style="margin-left:30; margin-right:auto">
+      <tr><td align="left">
+        <label for="word" class="ui-hidden-accessible">Word</label>
+        <input type="text" name="word" id="word" value="" placeholder="Enter word"/>
+      </td></tr>
+    
+      <tr><td align="left">
+          <label for="source" class="select">Source:</label>
+          <select name="source" id="source">
+            <% @source.each do |s| %>
+              <option value="<%= s %>"><%= s %></option>
+            <% end %>
+          </select>
+      </td></tr>
+        
+      <tr><td align="left">
+          <label for="level" class="select">Level:</label>
+          <select name="level" id="level">
+            <option value="basic">basic</option>
+            <option value="challenge">challenge</option>
+          </select>
+      </td></tr>
+
+       
+        <tr><td align="left">
+            <input type="submit" id = "submit" name="Crawl" value="Crawl" data-theme='e' data-corners="false" />
+        </td></tr>
+      </table>
+    <% end %>
+  </div>
+</div>

@@ -113,5 +113,15 @@ MobileLearning::Application.routes.draw do
     end
   end
 
+  resources :spellingbee do
+    collection do
+      get 'show'
+      post 'crawl'
+      get 'add'
+      get 'practice'
+      post 'result'
+    end
+  end
+
   root :to => 'learning#list'
 end

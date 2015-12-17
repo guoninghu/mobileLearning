@@ -1,0 +1,43 @@
+<script>
+  function playAudio(id) {
+    $('#targetAudio')[0].play();
+    return false;
+  }
+</script>
+
+
+<div data-role="content" style="text-align:left" id="BiggerFont">
+  <a onclick="playAudio('#targetAudio')">
+    <img height="60" align="middle" src="/assets/icons/sound.png">
+    <audio id="targetAudio" src="/<%= @word.audio%>"></audio>
+  </a>
+  <br/>
+  <br/>
+
+  <div data-role="collapsible" data-theme='b' data-collapsed='true'>
+    <h3>Definition</h3>
+    <% @meaning.each do |m| %>
+      <%= m[0] %></br>
+      <ul>
+        <% m[1].each do |m2| %>
+          <li><%= m2 %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+
+  <%= form_tag({controller: "spellingbee", action: "result"}, {target: "_self"}) do %>
+    <table cellspacing="10" style="margin-left:30; margin-right:auto">
+      <tr><td align="left">
+        <label for="spelling" class="ui-hidden-accessible">Word</label>
+        <input type="text" name="spell" id="spell" value="" placeholder="Enter word" autocomplete="off"/>
+      </td></tr>
+       
+      <tr><td align="left">
+          <input type="hidden" id = "word" name="word" value="<%=@word.id%>"/>
+          <input type="hidden" id = "cspell" name="cspell" value="<%=@word.word%>"/>
+          <input type="submit" id = "submit" name="Submit" value="Submit" data-theme='e' data-corners="false" />
+      </td></tr>
+    </table>
+  <% end %>
+</div>

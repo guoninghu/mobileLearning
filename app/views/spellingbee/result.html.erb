@@ -1,0 +1,52 @@
+<script>
+  function playAudio(id) {
+    $('#targetAudio')[0].play();
+    return false;
+  }
+</script>
+
+<div data-role="content" id="BiggerFont">
+  <table>
+    <tr>
+      <td><h1><span style="color:Maroon"><%= @cspell %></span></h1></td>
+    </tr>
+    <tr>
+      <td><h4><span style="color:Blue">Result:</span></h4></td>
+      <td><h4><%= @result %></h4></td>
+    </tr>
+    <tr>
+      <td><h4><span style="color:Blue">Source:</span></h4></td>
+      <td><h4><%= @word.source %></h4></td>
+    </tr>
+    <tr>
+      <td><h4><span style="color:Blue">Level:</span></h4></td>
+      <td><h4><%= @word.lvl %></h4></td>
+    </tr>
+    <tr>
+      <td><h4><span style="color:Blue">Sound:</span></h4></td>
+      <td><h4>
+          <a onclick="playAudio('#targetAudio')">
+            <img height="60" align="middle" src="/assets/icons/sound.png">
+            <audio id="targetAudio" src="/<%= @word.audio%>"></audio>
+          </a>
+      </h4></td>
+    </tr>
+  </table>
+  <h3><span style="color:Blue">Definition:</span></h4>
+  <% @meaning.each do |m| %>
+    <%= m[0] %></br>
+    <ul>
+      <% m[1].each do |m2| %>
+        <li><%= m2 %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <br/><br/><br/>
+  <table cellspacing="10" style="margin-left:auto; margin-right:auto"> 
+    <tr>
+      <td><a href="/spellingbee/add" target="_self" data-role="button" data-theme='b'>Add New Word</a></td>
+      <td><a href="/spellingbee/practice" target="_self" data-role="button" data-theme='b'>Practise</a></td>
+    </tr>    
+  </table>
+</div>
