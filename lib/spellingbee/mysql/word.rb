@@ -27,7 +27,5 @@ module MySqlDB
 		def getWordByText(word)
       getItem("word='#{word}'")
 		end
-
-    def getAll(
   end
 end

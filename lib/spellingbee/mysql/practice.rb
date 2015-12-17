@@ -94,7 +94,7 @@ module MySqlDB
           "where b.amateur is null limit #{limit}"
         write(query)
       else
-        query = "insert ignore into practice_queue select amateur, id from practice_record " +
+        query = "insert ignore into practice_queue select amateur, word from practice_record " +
           "where amateur = #{amateur} and status = '#{status}' order by rand() limit #{limit}"
         write(query)
       end

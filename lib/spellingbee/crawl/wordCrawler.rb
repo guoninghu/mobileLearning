@@ -16,16 +16,17 @@ class WordMeaning
     @audio = nil
     doc.search("//audio/source[@type='audio/ogg']").each do |elem|
       @audio = elem.attributes['src']
+      break
     end
   end
 
   def getSection(elem)
     type, meaning = nil, []
     elem.search("//header/span/").each do |elem2|
-      type = elem2.inner_text.gsub('\n', ' ').gsub('\r', ' ').strip
+      type = elem2.inner_text.gsub("\n", " ").gsub("\r", " ").strip
     end
     elem.search("//div[@class='def-content']").each do |elem2|
-      meaning << elem2.inner_text.gsub('\n', ' ').gsub('\r', ' ').strip
+      meaning << elem2.inner_text.gsub("\n", " ").gsub("\r", " ").strip
     end
 
     return [type, meaning]
